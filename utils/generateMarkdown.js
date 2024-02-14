@@ -1,20 +1,53 @@
-// TODO: Create a function that returns a license badge based on which license is passed in
-// If there is no license, return an empty string
-function renderLicenseBadge(license) {}
-
-// TODO: Create a function that returns the license link
-// If there is no license, return an empty string
-function renderLicenseLink(license) {}
-
-// TODO: Create a function that returns the license section of README
-// If there is no license, return an empty string
-function renderLicenseSection(license) {}
-
-// TODO: Create a function to generate markdown for README
 function generateMarkdown(data) {
-  return `# ${data.title}
+  let toc = `## Table of Contents\n`;
+  if (data.installation) toc += `- [Installation](#installation)\n`;
+  if (data.usage) toc += `- [Usage](#usage)\n`;
+  if (data.license) toc += `- [License](#license)\n`;
+  if (data.contributing || data.contributors) toc += `- [Contributing](#contributing)\n`;
+  if (data.tests) toc += `- [Tests](#tests)\n`;
+  if (data.questions) toc += `- [Questions](#questions)\n`;
+  data.customSections.forEach(section => {
+    toc += `- [${section.title}](#${section.title.toLowerCase().replace(/ /g, '-')})\n`;
+  });
 
+  let markdown = `
+# ${data.title}
+
+## Description
+${data.description}
+
+${toc}
+
+## Installation
+${data.installation}
+
+## Usage
+${data.usage}
+
+## License
+This application is covered under the ${data.license} license.
+
+## Contributing
+${data.contributing}
+${data.contributors?.map(username => `- [@${username}](https://github.com/${username})`).join('\n')}
+
+## Tests
+${data.tests}
+
+## Questions
+For questions or inquiries, please contact:
+- GitHub: [${data.username}](https://github.com/${data.username})
+- Email: ${data.email}
 `;
+
+  data.customSections.forEach(section => {
+    markdown += `
+## ${section.title}
+${section.content}
+`;
+  });
+
+  return markdown;
 }
 
 module.exports = generateMarkdown;
